@@ -346,6 +346,37 @@ Some guidelines for maintaining this documentation:
 - Document any non-obvious architectural decisions or complex subsystems
 - Note any recurring patterns in the codebase that should be followed
 - When fixing bugs, document the underlying cause and solution pattern
+- ALWAYS prefer updating CLAUDE.md rather than leaving information only in conversation history
+
+### Key Lessons from Package Renaming
+
+The migration from OctoMaster to GitCompass in March 2025 revealed several important practices:
+
+1. **Linting Configuration**: When working with Python projects, check for `.flake8` configuration files. If modifications are needed (like line length adjustments), update the config file rather than modifying the code to fit restrictive defaults.
+
+2. **Import Optimization**: The codebase prefers minimizing imports. Remove any unused imports found with `F401` flake8 errors, and import only what's needed rather than using broad imports.
+
+3. **Dynamic Path Resolution**: Always use dynamic path resolution rather than hardcoded paths:
+   ```python
+   # Good
+   os.path.join(os.path.dirname(os.path.abspath(__file__)), "relative/path")
+   
+   # Bad
+   "/Users/username/Projects/GitCompass/path"
+   ```
+
+4. **Handling Long Lines**: When encountering long lines that exceed line length limits:
+   - Break variable assignments into multiple steps
+   - Use continued lines with proper indentation
+   - Example: 
+     ```python
+     # Instead of this long line:
+     report += f"({milestone['closed_issues']}/{milestone['closed_issues'] + milestone['open_issues']} issues closed)"
+     
+     # Do this:
+     total = milestone['closed_issues'] + milestone['open_issues']
+     report += f"({milestone['closed_issues']}/{total} issues closed)"
+     ```
 
 As the project evolves, this documentation should grow alongside it, making it easier for new contributors and AI assistants to quickly understand and work with the codebase.
 
