@@ -1,9 +1,12 @@
 """GitHub project management module."""
 
-from typing import Dict, List, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
+
 import github
 from github import Github
+
 from octomaster.auth.github_auth import GitHubAuth
+
 
 class ProjectManager:
     """Manage GitHub projects."""
@@ -17,12 +20,14 @@ class ProjectManager:
         self.auth = auth
         self.github = auth.client
 
-    def create_project(self, 
-                      name: str, 
-                      body: str = "", 
-                      org: Optional[str] = None,
-                      repo: Optional[str] = None,
-                      template: str = "basic") -> Dict[str, Any]:
+    def create_project(
+        self,
+        name: str,
+        body: str = "",
+        org: Optional[str] = None,
+        repo: Optional[str] = None,
+        template: str = "basic",
+    ) -> Dict[str, Any]:
         """Create a new GitHub project.
 
         Args:
@@ -48,19 +53,19 @@ class ProjectManager:
             # Create user project
             user = self.github.get_user()
             project = user.create_project(name=name, body=body)
-            
+
         # Configure project based on template
         if template == "basic":
             self._configure_basic_project(project)
         elif template == "advanced":
             self._configure_advanced_project(project)
-            
+
         return {
             "id": project.id,
             "name": project.name,
             "body": project.body,
             "html_url": project.html_url,
-            "columns": self._get_project_columns(project)
+            "columns": self._get_project_columns(project),
         }
 
     def _configure_basic_project(self, project: github.Project.Project) -> None:
@@ -99,18 +104,13 @@ class ProjectManager:
         """
         columns = []
         for column in project.get_columns():
-            columns.append({
-                "id": column.id,
-                "name": column.name
-            })
-            
+            columns.append({"id": column.id, "name": column.name})
+
         return columns
 
-    def add_issue_to_project(self, 
-                          project_id: int, 
-                          repo: str, 
-                          issue_number: int,
-                          column_name: Optional[str] = None) -> Dict[str, Any]:
+    def add_issue_to_project(
+        self, project_id: int, repo: str, issue_number: int, column_name: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Add an issue to a project column.
 
         Args:
@@ -125,7 +125,7 @@ class ProjectManager:
         # Get the issue
         repository = self.github.get_repo(repo)
         issue = repository.get_issue(issue_number)
-        
+
         # Get the project and column
         for proj in self.github.get_user().get_projects():
             if proj.id == project_id:
@@ -133,7 +133,7 @@ class ProjectManager:
                 break
         else:
             # If not found in user projects, check org projects
-            owner, _ = repo.split('/')
+            owner, _ = repo.split("/")
             for proj in self.github.get_organization(owner).get_projects():
                 if proj.id == project_id:
                     project = proj
@@ -146,7 +146,7 @@ class ProjectManager:
                         break
                 else:
                     raise ValueError(f"Project with ID {project_id} not found")
-        
+
         # Get the target column
         if column_name:
             for column in project.get_columns():
@@ -158,18 +158,20 @@ class ProjectManager:
         else:
             # Default to first column
             target_column = project.get_columns()[0]
-        
+
         # Create card in the column
         card = target_column.create_card(content_id=issue.id, content_type="Issue")
-        
+
         return {
             "id": card.id,
             "project_id": project.id,
             "issue_number": issue_number,
-            "column": target_column.name
+            "column": target_column.name,
         }
-        
-    def get_project(self, project_id: int, repo: Optional[str] = None, org: Optional[str] = None) -> Dict[str, Any]:
+
+    def get_project(
+        self, project_id: int, repo: Optional[str] = None, org: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Get a project by ID.
 
         Args:
@@ -218,9 +220,9 @@ class ProjectManager:
             "body": project.body,
             "html_url": project.html_url,
             "columns": self._get_project_columns(project),
-            "cards": self._get_project_cards(project)
+            "cards": self._get_project_cards(project),
         }
-        
+
     def _get_project_cards(self, project: github.Project.Project) -> Dict[str, List]:
         """Get all cards in a project organized by column.
 
@@ -231,42 +233,37 @@ class ProjectManager:
             Dictionary with columns as keys and lists of cards as values
         """
         cards_by_column = {}
-        
+
         for column in project.get_columns():
             column_cards = []
             for card in column.get_cards():
-                card_info = {
-                    "id": card.id,
-                    "note": card.note
-                }
-                
+                card_info = {"id": card.id, "note": card.note}
+
                 # Get issue info if card is linked to an issue
                 if card.content_url:
                     # Extract issue URL from content_url
-                    parts = card.content_url.split('/')
+                    parts = card.content_url.split("/")
                     if len(parts) >= 2:
                         issue_number = int(parts[-1])
                         repo_owner = parts[-4]
                         repo_name = parts[-3]
-                        
+
                         try:
                             repo = self.github.get_repo(f"{repo_owner}/{repo_name}")
                             issue = repo.get_issue(issue_number)
-                            
+
                             card_info["issue"] = {
                                 "number": issue.number,
                                 "title": issue.title,
                                 "state": issue.state,
-                                "html_url": issue.html_url
+                                "html_url": issue.html_url,
                             }
                         except Exception:
                             # If issue can't be loaded, just include the number
-                            card_info["issue"] = {
-                                "number": issue_number
-                            }
-                    
+                            card_info["issue"] = {"number": issue_number}
+
                 column_cards.append(card_info)
-                
+
             cards_by_column[column.name] = column_cards
-            
+
         return cards_by_column

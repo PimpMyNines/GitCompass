@@ -1,8 +1,8 @@
-# OctoMaster: GitHub Project Management Tool
+# GitCompass: GitHub Project Management Tool
 
 <div align="center">
 
-![OctoMaster Logo](docs/octomaster-logo.png)
+![GitCompass Logo](docs/gitcompass-logo.png)
 
 [![Build Status](https://github.com/PimpMyNines/github-project-management/actions/workflows/tests.yml/badge.svg)](https://github.com/PimpMyNines/github-project-management/actions/workflows/tests.yml)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
@@ -26,7 +26,7 @@ A powerful Python-based tool for managing GitHub projects, issues, sub-issues, a
 ### From PyPI (Coming Soon)
 
 ```bash
-pip install octomaster
+pip install gitcompass
 ```
 
 ### Development Installation
@@ -51,10 +51,10 @@ make install
 
 ```bash
 # Build the Docker image
-docker build -t octomaster .
+docker build -t gitcompass .
 
 # Run with Docker
-docker run -it --rm -e GITHUB_TOKEN=your-token octomaster --help
+docker run -it --rm -e GITHUB_TOKEN=your-token gitcompass --help
 ```
 
 ## 📋 Quick Start
@@ -67,7 +67,7 @@ Set your GitHub token:
 export GITHUB_TOKEN=your-github-token
 ```
 
-Or create a config file at `~/.octomaster/config.yaml`:
+Or create a config file at `~/.gitcompass/config.yaml`:
 
 ```yaml
 auth:
@@ -78,30 +78,30 @@ auth:
 
 ```bash
 # Create an issue
-octomaster issues create --repo owner/repo --title "New feature" --body "Feature description"
+gitcompass issues create --repo owner/repo --title "New feature" --body "Feature description"
 
 # Create a sub-issue
-octomaster issues create --repo owner/repo --title "Sub-task" --parent 123
+gitcompass issues create --repo owner/repo --title "Sub-task" --parent 123
 
 # Convert tasks to sub-issues
-octomaster issues convert-tasks --repo owner/repo --issue 123
+gitcompass issues convert-tasks --repo owner/repo --issue 123
 
 # Create a project
-octomaster projects create --name "Q2 Development" --repo owner/repo
+gitcompass projects create --name "Q2 Development" --repo owner/repo
 
 # Create a milestone
-octomaster roadmap create --repo owner/repo --title "v1.0" --due-date 2023-12-31
+gitcompass roadmap create --repo owner/repo --title "v1.0" --due-date 2023-12-31
 
 # Generate roadmap report
-octomaster roadmap report --repo owner/repo
+gitcompass roadmap report --repo owner/repo
 ```
 
 ### Python API
 
 ```python
-from octomaster.auth.github_auth import GitHubAuth
-from octomaster.issues.issue_manager import IssueManager
-from octomaster.utils.config import Config
+from gitcompass.auth.github_auth import GitHubAuth
+from gitcompass.issues.issue_manager import IssueManager
+from gitcompass.utils.config import Config
 
 # Initialize
 config = Config()

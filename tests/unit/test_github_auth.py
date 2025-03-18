@@ -1,8 +1,9 @@
-"""Unit tests for GitHub authentication module."""
+"""Unit tests for GitCompass GitHub authentication module."""
 
 import os
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from src.octomaster.auth.github_auth import GitHubAuth
 from src.octomaster.utils.config import Config
@@ -30,10 +31,10 @@ def test_init_with_token(mock_github_class, mock_config):
     # Arrange
     mock_github_instance = MagicMock()
     mock_github_class.return_value = mock_github_instance
-    
+
     # Act
     auth = GitHubAuth(mock_config)
-    
+
     # Assert
     assert auth._token == "test-token"
     mock_github_class.assert_called_once_with("test-token")
@@ -46,17 +47,17 @@ def test_init_with_env_token(mock_github_class):
     # Arrange
     mock_github_instance = MagicMock()
     mock_github_class.return_value = mock_github_instance
-    
+
     # Mock environment variables
     with patch.dict(os.environ, {"GITHUB_TOKEN": "env-token"}):
         # Mock config that doesn't have a token
         config = MagicMock(spec=Config)
         config.get.return_value = None
         config.has.return_value = False
-        
+
         # Act
         auth = GitHubAuth(config)
-        
+
         # Assert
         assert auth._token == "env-token"
         mock_github_class.assert_called_once_with("env-token")
@@ -70,7 +71,7 @@ def test_missing_token(mock_github_class):
     config = MagicMock(spec=Config)
     config.get.return_value = None
     config.has.return_value = False
-    
+
     # Remove environment variable if it exists
     with patch.dict(os.environ, {"GITHUB_TOKEN": ""}, clear=True):
         # Act & Assert
@@ -84,10 +85,10 @@ def test_client_property(mock_config):
     auth = GitHubAuth(mock_config)
     mock_client = MagicMock()
     auth._github_client = mock_client
-    
+
     # Act
     client = auth.client
-    
+
     # Assert
     assert client == mock_client
 
@@ -97,10 +98,10 @@ def test_get_token(mock_config):
     # Arrange
     auth = GitHubAuth(mock_config)
     auth._token = "test-token"
-    
+
     # Act
     token = auth.get_token()
-    
+
     # Assert
     assert token == "test-token"
 
@@ -113,10 +114,10 @@ def test_get_repository(mock_config):
     mock_repo = MagicMock()
     mock_client.get_repo.return_value = mock_repo
     auth._github_client = mock_client
-    
+
     # Act
     repo = auth.get_repo("owner/repo")
-    
+
     # Assert
     mock_client.get_repo.assert_called_once_with("owner/repo")
     assert repo == mock_repo

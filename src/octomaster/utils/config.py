@@ -1,8 +1,10 @@
-"""Configuration handling for OctoMaster."""
+"""Configuration handling for GitCompass."""
 
 import os
+from typing import Any, Dict, List, Optional, Union
+
 import yaml
-from typing import Any, Dict, Optional, Union, List
+
 
 class Config:
     """Configuration manager.
@@ -31,21 +33,21 @@ class Config:
         # Default config locations
         potential_config_files = [
             config_file,
-            os.environ.get('OCTOMASTER_CONFIG'),
-            os.path.join(os.getcwd(), 'config.yaml'),
-            os.path.expanduser('~/.octomaster/config.yaml'),
+            os.environ.get("GITCOMPASS_CONFIG"),
+            os.path.join(os.getcwd(), "config.yaml"),
+            os.path.expanduser("~/.gitcompass/config.yaml"),
         ]
-        
+
         # Try each location
         for file_path in potential_config_files:
             if file_path and os.path.isfile(file_path):
                 try:
-                    with open(file_path, 'r') as f:
+                    with open(file_path, "r") as f:
                         self.config_data = yaml.safe_load(f) or {}
                     break
                 except Exception as e:
                     print(f"Warning: Failed to load config file {file_path}: {str(e)}")
-        
+
         # If no config found, initialize with empty dict
         if not self.config_data:
             self.config_data = {}
@@ -61,19 +63,19 @@ class Config:
             Configuration value
         """
         # Try environment variable first (convert dots to underscores)
-        env_key = f"OCTOMASTER_{key.replace('.', '_').upper()}"
+        env_key = f"GITCOMPASS_{key.replace('.', '_').upper()}"
         if env_key in os.environ:
             return os.environ[env_key]
-            
+
         # If not in environment, look in config data
-        parts = key.split('.')
+        parts = key.split(".")
         current = self.config_data
         for part in parts:
             if isinstance(current, dict) and part in current:
                 current = current[part]
             else:
                 return default
-                
+
         return current
 
     def has(self, key: str) -> bool:
@@ -86,19 +88,19 @@ class Config:
             True if key exists, False otherwise
         """
         # Check env var first
-        env_key = f"OCTOMASTER_{key.replace('.', '_').upper()}"
+        env_key = f"GITCOMPASS_{key.replace('.', '_').upper()}"
         if env_key in os.environ:
             return True
-            
+
         # Check config data
-        parts = key.split('.')
+        parts = key.split(".")
         current = self.config_data
         for part in parts:
             if isinstance(current, dict) and part in current:
                 current = current[part]
             else:
                 return False
-                
+
         return True
 
     def set(self, key: str, value: Any) -> None:
@@ -108,14 +110,14 @@ class Config:
             key: Configuration key (dot notation)
             value: Value to set
         """
-        parts = key.split('.')
+        parts = key.split(".")
         current = self.config_data
-        
+
         # Navigate to the right level
         for part in parts[:-1]:
             if part not in current or not isinstance(current[part], dict):
                 current[part] = {}
             current = current[part]
-            
+
         # Set the value
         current[parts[-1]] = value

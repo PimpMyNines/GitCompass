@@ -1,10 +1,13 @@
 """GitHub authentication module."""
 
 import os
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 import github
 from github import Github
+
 from octomaster.utils.config import Config
+
 
 class GitHubAuth:
     """GitHub authentication handler.
@@ -27,24 +30,24 @@ class GitHubAuth:
     def _initialize_auth(self) -> None:
         """Initialize GitHub authentication using config settings."""
         # Try environment variable first
-        token = os.environ.get('GITHUB_TOKEN')
-        
+        token = os.environ.get("GITHUB_TOKEN")
+
         # If not in env, try from config
-        if not token and self.config.has('auth.token'):
-            token = self.config.get('auth.token')
-            
+        if not token and self.config.has("auth.token"):
+            token = self.config.get("auth.token")
+
         # GitHub App authentication
-        if not token and self.config.has('auth.app'):
+        if not token and self.config.has("auth.app"):
             # GitHub App authentication is more complex and would be
             # implemented here using JWT and installation tokens
             pass
-            
+
         if not token:
             raise ValueError(
                 "GitHub token not found. Set GITHUB_TOKEN environment "
                 "variable or configure in the auth.token config setting."
             )
-            
+
         self._token = token
         self._github_client = Github(token)
 

@@ -1,4 +1,4 @@
-# OctoMaster Configuration
+# GitCompass Configuration
 
 # Authentication settings
 auth:
@@ -13,7 +13,7 @@ auth:
   app:
     app_id: 12345
     installation_id: 67890
-    private_key_path: ~/.octomaster/private-key.pem
+    private_key_path: ~/.gitcompass/private-key.pem
 
 # Default repository settings
 defaults:
@@ -48,5 +48,5 @@ api:
 # Logging settings
 logging:
   level: INFO
-  file: ~/.octomaster/logs/octomaster.log
+  file: ~/.gitcompass/logs/gitcompass.log
   format: "%(asctime)s [%(levelname)s] %(message)s"

@@ -1,25 +1,25 @@
-# OctoMaster Configuration Guide
+# GitCompass Configuration Guide
 
 ## Overview
 
-OctoMaster provides flexible configuration through multiple mechanisms, allowing you to set up the tool according to your workflow needs. This guide explains the available configuration options and how to use them.
+GitCompass provides flexible configuration through multiple mechanisms, allowing you to set up the tool according to your workflow needs. This guide explains the available configuration options and how to use them.
 
 ## Configuration Sources
 
-OctoMaster looks for configuration in the following locations, in order of precedence (highest to lowest):
+GitCompass looks for configuration in the following locations, in order of precedence (highest to lowest):
 
 1. **Command-line arguments**: Parameters passed directly to commands
-2. **Environment variables**: Prefixed with `OCTOMASTER_`
+2. **Environment variables**: Prefixed with `GITCOMPASS_`
 3. **Configuration files**: YAML files in specific locations
 4. **Default values**: Built-in defaults for any unspecified options
 
 ## Configuration Files
 
-OctoMaster will look for configuration files in the following locations:
+GitCompass will look for configuration files in the following locations:
 
-1. Path specified by the `OCTOMASTER_CONFIG` environment variable
+1. Path specified by the `GITCOMPASS_CONFIG` environment variable
 2. `config.yaml` in the current working directory
-3. `~/.octomaster/config.yaml` in the user's home directory
+3. `~/.gitcompass/config.yaml` in the user's home directory
 
 The configuration file should be in YAML format, with the following structure:
 
@@ -36,7 +36,7 @@ auth:
   app:
     app_id: 12345
     installation_id: 67890
-    private_key_path: ~/.octomaster/private-key.pem
+    private_key_path: ~/.gitcompass/private-key.pem
 
 # Default repository settings
 defaults:
@@ -71,22 +71,22 @@ api:
 # Logging settings
 logging:
   level: INFO
-  file: ~/.octomaster/logs/octomaster.log
+  file: ~/.gitcompass/logs/gitcompass.log
   format: "%(asctime)s [%(levelname)s] %(message)s"
 ```
 
 ## Environment Variables
 
-Environment variables provide a convenient way to set configuration options without modifying files. OctoMaster recognizes the following environment variables:
+Environment variables provide a convenient way to set configuration options without modifying files. GitCompass recognizes the following environment variables:
 
 - `GITHUB_TOKEN`: Your GitHub personal access token
-- `OCTOMASTER_CONFIG`: Path to a configuration file
-- `OCTOMASTER_AUTH_TOKEN`: Your GitHub personal access token (alternative to `GITHUB_TOKEN`)
-- `OCTOMASTER_AUTH_METHOD`: Authentication method (`token` or `app`)
-- `OCTOMASTER_DEFAULTS_REPOSITORY`: Default repository in format `owner/repo`
-- `OCTOMASTER_DEFAULTS_ORGANIZATION`: Default organization name
-- `OCTOMASTER_LOGGING_LEVEL`: Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`)
-- `OCTOMASTER_LOGGING_FILE`: Path to log file
+- `GITCOMPASS_CONFIG`: Path to a configuration file
+- `GITCOMPASS_AUTH_TOKEN`: Your GitHub personal access token (alternative to `GITHUB_TOKEN`)
+- `GITCOMPASS_AUTH_METHOD`: Authentication method (`token` or `app`)
+- `GITCOMPASS_DEFAULTS_REPOSITORY`: Default repository in format `owner/repo`
+- `GITCOMPASS_DEFAULTS_ORGANIZATION`: Default organization name
+- `GITCOMPASS_LOGGING_LEVEL`: Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`)
+- `GITCOMPASS_LOGGING_FILE`: Path to log file
 
 Environment variables can be set using:
 
@@ -108,14 +108,14 @@ Command-line arguments provide the most direct way to configure operations. Thes
 For example:
 
 ```bash
-octomaster issues create --repo owner/repo --title "Issue title" --labels bug enhancement
+gitcompass issues create --repo owner/repo --title "Issue title" --labels bug enhancement
 ```
 
-Run `octomaster --help` to see all available commands and options.
+Run `gitcompass --help` to see all available commands and options.
 
 ## Authentication
 
-OctoMaster supports two authentication methods:
+GitCompass supports two authentication methods:
 
 ### Personal Access Token
 
@@ -143,7 +143,7 @@ auth:
   app:
     app_id: 12345
     installation_id: 67890
-    private_key_path: ~/.octomaster/private-key.pem
+    private_key_path: ~/.gitcompass/private-key.pem
 ```
 
 ## Default Settings
@@ -163,10 +163,10 @@ With these defaults, you can run commands without specifying all parameters:
 
 ```bash
 # Uses the default repository from config
-octomaster issues create --title "New issue"
+gitcompass issues create --title "New issue"
 
 # Instead of having to type
-octomaster issues create --repo owner/repo --title "New issue"
+gitcompass issues create --repo owner/repo --title "New issue"
 ```
 
 ## Logging Configuration
@@ -176,7 +176,7 @@ Configure logging behavior:
 ```yaml
 logging:
   level: INFO  # DEBUG, INFO, WARNING, ERROR
-  file: ~/.octomaster/logs/octomaster.log
+  file: ~/.gitcompass/logs/gitcompass.log
   format: "%(asctime)s [%(levelname)s] %(message)s"
 ```
 

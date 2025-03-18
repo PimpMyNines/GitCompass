@@ -13,10 +13,10 @@ COPY . .
 RUN pip install -e .
 
 # Create necessary directories
-RUN mkdir -p ~/.octomaster/logs
+RUN mkdir -p ~/.gitcompass/logs
 
 # Set the entrypoint to the CLI
-ENTRYPOINT ["octomaster"]
+ENTRYPOINT ["gitcompass"]
 
 # Default command shows help
 CMD ["--help"]

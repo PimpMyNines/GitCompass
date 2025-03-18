@@ -1,8 +1,8 @@
-# OctoMaster: Python-based GitHub Project Management Tool
+# GitCompass: Python-based GitHub Project Management Tool
 
 ## Summary
 
-This pull request implements a comprehensive Python-based GitHub project management tool as outlined in the GITHUB_PROJECT_MANAGEMENT_PLAN.md document. OctoMaster replaces the existing bash scripts with a robust Python solution that provides better error handling, cross-platform support, and extends the feature set.
+This pull request implements a comprehensive Python-based GitHub project management tool as outlined in the GITHUB_PROJECT_MANAGEMENT_PLAN.md document. GitCompass replaces the existing bash scripts with a robust Python solution that provides better error handling, cross-platform support, and extends the feature set.
 
 ## Changes
 
@@ -45,15 +45,15 @@ This pull request implements a comprehensive Python-based GitHub project managem
    export GITHUB_TOKEN=your-token
    
    # Get version
-   octomaster version
+   gitcompass version
    
    # List the help
-   octomaster --help
+   gitcompass --help
    ```
 
 4. Try creating an issue:
    ```bash
-   octomaster issues create --repo your-org/your-repo --title "Test Issue" --body "Testing OctoMaster"
+   gitcompass issues create --repo your-org/your-repo --title "Test Issue" --body "Testing GitCompass"
    ```
 
 ## Future Work

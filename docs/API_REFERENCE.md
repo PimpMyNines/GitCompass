@@ -1,8 +1,8 @@
-# OctoMaster API Reference
+# GitCompass API Reference
 
 ## Overview
 
-OctoMaster provides both a command-line interface and a Python API for managing GitHub projects, issues, and roadmaps. This document describes the Python API, which can be used to build custom integrations or scripts.
+GitCompass provides both a command-line interface and a Python API for managing GitHub projects, issues, and roadmaps. This document describes the Python API, which can be used to build custom integrations or scripts.
 
 ## Authentication
 
@@ -11,8 +11,8 @@ OctoMaster provides both a command-line interface and a Python API for managing 
 The `GitHubAuth` class handles authentication with GitHub using either personal access tokens or GitHub Apps.
 
 ```python
-from octomaster.auth.github_auth import GitHubAuth
-from octomaster.utils.config import Config
+from gitcompass.auth.github_auth import GitHubAuth
+from gitcompass.utils.config import Config
 
 # Create a configuration (loads from config file or environment variables)
 config = Config()
@@ -38,7 +38,7 @@ repo = auth.get_repo("owner/repo")
 The `IssueManager` class provides methods for working with GitHub issues, including creating issues, updating issues, and converting tasks to sub-issues.
 
 ```python
-from octomaster.issues.issue_manager import IssueManager
+from gitcompass.issues.issue_manager import IssueManager
 
 # Create an issue manager
 issue_manager = IssueManager(auth)
@@ -87,7 +87,7 @@ issues = issue_manager.get_issues(
 The `ProjectManager` class provides methods for working with GitHub projects, such as creating projects, adding issues to projects, and organizing project columns.
 
 ```python
-from octomaster.projects.project_manager import ProjectManager
+from gitcompass.projects.project_manager import ProjectManager
 
 # Create a project manager
 project_manager = ProjectManager(auth)
@@ -131,7 +131,7 @@ for column_name, column_cards in cards.items():
 The `RoadmapManager` class provides methods for working with GitHub roadmaps using milestones.
 
 ```python
-from octomaster.roadmap.roadmap_manager import RoadmapManager
+from gitcompass.roadmap.roadmap_manager import RoadmapManager
 
 # Create a roadmap manager
 roadmap_manager = RoadmapManager(auth)
@@ -172,7 +172,7 @@ with open("roadmap.md", "w") as f:
 The `Config` class handles loading and accessing configuration from multiple sources: config files, environment variables, and command-line arguments.
 
 ```python
-from octomaster.utils.config import Config
+from gitcompass.utils.config import Config
 
 # Create a configuration (optionally with a specific config file)
 config = Config(config_file="path/to/config.yaml")
@@ -190,7 +190,7 @@ config.set("auth.token", "new-token-value")
 
 ## Error Handling
 
-OctoMaster methods raise descriptive exceptions when errors occur. It's recommended to use try-except blocks to handle these exceptions:
+GitCompass methods raise descriptive exceptions when errors occur. It's recommended to use try-except blocks to handle these exceptions:
 
 ```python
 try:
@@ -210,10 +210,10 @@ except Exception as e:
 Here's a complete example that creates a new issue and adds it to a project:
 
 ```python
-from octomaster.auth.github_auth import GitHubAuth
-from octomaster.issues.issue_manager import IssueManager
-from octomaster.projects.project_manager import ProjectManager
-from octomaster.utils.config import Config
+from gitcompass.auth.github_auth import GitHubAuth
+from gitcompass.issues.issue_manager import IssueManager
+from gitcompass.projects.project_manager import ProjectManager
+from gitcompass.utils.config import Config
 
 def main():
     # Initialize
