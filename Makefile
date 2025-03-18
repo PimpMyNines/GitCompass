@@ -1,4 +1,4 @@
-# OctoMaster Makefile
+# GitCompass Makefile
 
 .PHONY: all install test lint format clean docs
 
@@ -13,7 +13,7 @@ install:
 develop:
 	pip install -e ".[dev]"
 	# Create necessary directories
-	mkdir -p ~/.octomaster/logs
+	mkdir -p ~/.gitcompass/logs
 
 # Run tests
 test:
@@ -21,18 +21,18 @@ test:
 
 # Run tests with coverage
 coverage:
-	python -m pytest --cov=src/octomaster --cov-report=html --cov-report=term
+	python -m pytest --cov=src/gitcompass --cov-report=html --cov-report=term
 
 # Run linting checks
 lint:
-	flake8 src/octomaster
+	flake8 src/gitcompass
 	# TODO: Add mypy once type hints are more complete
-	# mypy src/octomaster
+	# mypy src/gitcompass
 
 # Format code
 format:
-	black src/octomaster tests
-	isort src/octomaster tests
+	black src/gitcompass tests
+	isort src/gitcompass tests
 
 # Clean up build artifacts
 clean:
@@ -55,7 +55,7 @@ dist: clean
 
 # Docker commands
 docker-build:
-	docker build -t octomaster:latest .
+	docker build -t gitcompass:latest .
 
 docker-run:
-	docker run -it --rm -e GITHUB_TOKEN=${GITHUB_TOKEN} octomaster:latest
+	docker run -it --rm -e GITHUB_TOKEN=${GITHUB_TOKEN} gitcompass:latest

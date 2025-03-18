@@ -1,12 +1,11 @@
 """GitHub authentication module."""
 
 import os
-from typing import Any, Dict, Optional
 
 import github
 from github import Github
 
-from octomaster.utils.config import Config
+from gitcompass.utils.config import Config
 
 
 class GitHubAuth:

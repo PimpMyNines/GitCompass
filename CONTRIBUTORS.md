@@ -2,7 +2,7 @@
 
 ## Core Team
 
-- OctoMaster Team (PimpMyNines)
+- GitCompass Team (PimpMyNines)
 
 ## Contributors
 
@@ -22,8 +22,8 @@ Thank you to all the contributors who have helped make this project better!
 
 ```bash
 # Clone the repository
-git clone https://github.com/PimpMyNines/github-project-management.git
-cd github-project-management
+git clone https://github.com/PimpMyNines/gitcompass.git
+cd gitcompass
 
 # Create and activate virtual environment
 python -m venv venv

@@ -1,12 +1,11 @@
 """GitHub roadmap management module."""
 
 import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import github
-from github import Github
 
-from octomaster.auth.github_auth import GitHubAuth
+from gitcompass.auth.github_auth import GitHubAuth
 
 
 class RoadmapManager:
@@ -137,8 +136,9 @@ class RoadmapManager:
             report += "## Current Milestone\n\n"
             report += f"### {current_milestone['title']}\n\n"
             report += f"Due: {current_milestone['due_on'] or 'No due date'}\n\n"
+            total = current_milestone['closed_issues'] + current_milestone['open_issues']
             report += f"Progress: {current_milestone['completion_percentage']}% complete "
-            report += f"({current_milestone['closed_issues']}/{current_milestone['closed_issues'] + current_milestone['open_issues']} issues closed)\n\n"
+            report += f"({current_milestone['closed_issues']}/{total} issues closed)\n\n"
 
         # Upcoming milestones
         upcoming = [m for m in roadmap if m["state"] == "open" and m != current_milestone]
@@ -147,8 +147,9 @@ class RoadmapManager:
             for milestone in upcoming:
                 report += f"### {milestone['title']}\n\n"
                 report += f"Due: {milestone['due_on'] or 'No due date'}\n\n"
+                total = milestone['closed_issues'] + milestone['open_issues']
                 report += f"Progress: {milestone['completion_percentage']}% complete "
-                report += f"({milestone['closed_issues']}/{milestone['closed_issues'] + milestone['open_issues']} issues closed)\n\n"
+                report += f"({milestone['closed_issues']}/{total} issues closed)\n\n"
 
         # Completed milestones
         completed = [m for m in roadmap if m["state"] == "closed"]

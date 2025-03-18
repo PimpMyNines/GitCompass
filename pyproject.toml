@@ -43,13 +43,13 @@ dev = [
 ]
 
 [project.scripts]
-gitcompass = "octomaster.cli:main"
+gitcompass = "gitcompass.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/PimpMyNines/github-project-management"
-Repository = "https://github.com/PimpMyNines/github-project-management.git"
-Issues = "https://github.com/PimpMyNines/github-project-management/issues"
-Documentation = "https://github.com/PimpMyNines/github-project-management/tree/main/docs"
+Homepage = "https://github.com/PimpMyNines/gitcompass"
+Repository = "https://github.com/PimpMyNines/gitcompass.git"
+Issues = "https://github.com/PimpMyNines/gitcompass/issues"
+Documentation = "https://github.com/PimpMyNines/gitcompass/tree/main/docs"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -5,7 +5,7 @@ import yaml
 import re
 
 # Define the workflows directory
-workflows_dir = "/Users/slopresto/Projects/OctoMaster/.github/workflows"
+workflows_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".github", "workflows")
 
 # Define commands that should use Makefile targets
 makefile_commands = {

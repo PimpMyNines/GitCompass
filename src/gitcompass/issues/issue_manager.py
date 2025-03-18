@@ -1,11 +1,10 @@
 """GitHub issue management module."""
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import github
-from github import Github
 
-from octomaster.auth.github_auth import GitHubAuth
+from gitcompass.auth.github_auth import GitHubAuth
 
 
 class IssueManager:

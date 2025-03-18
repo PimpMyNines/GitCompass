@@ -6,7 +6,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.octomaster.utils.config import Config
+from src.gitcompass.utils.config import Config
 
 
 def test_config_initialization():

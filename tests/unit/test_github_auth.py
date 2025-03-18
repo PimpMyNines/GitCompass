@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.octomaster.auth.github_auth import GitHubAuth
-from src.octomaster.utils.config import Config
+from src.gitcompass.auth.github_auth import GitHubAuth
+from src.gitcompass.utils.config import Config
 
 
 @pytest.fixture
@@ -25,7 +25,7 @@ def mock_github():
     return github_mock
 
 
-@patch("src.octomaster.auth.github_auth.Github")
+@patch("src.gitcompass.auth.github_auth.Github")
 def test_init_with_token(mock_github_class, mock_config):
     """Test initialization with a token."""
     # Arrange
@@ -41,7 +41,7 @@ def test_init_with_token(mock_github_class, mock_config):
     assert auth._github_client == mock_github_instance
 
 
-@patch("src.octomaster.auth.github_auth.Github")
+@patch("src.gitcompass.auth.github_auth.Github")
 def test_init_with_env_token(mock_github_class):
     """Test initialization with a token from environment."""
     # Arrange
@@ -63,7 +63,7 @@ def test_init_with_env_token(mock_github_class):
         mock_github_class.assert_called_once_with("env-token")
 
 
-@patch("src.octomaster.auth.github_auth.Github")
+@patch("src.gitcompass.auth.github_auth.Github")
 def test_missing_token(mock_github_class):
     """Test initialization with no token raises error."""
     # Arrange

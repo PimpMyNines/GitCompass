@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """Command-line interface for GitCompass."""
 
-import os
 import sys
 
 import click
 
-from octomaster.auth.github_auth import GitHubAuth
-from octomaster.issues.issue_manager import IssueManager
-from octomaster.projects.project_manager import ProjectManager
-from octomaster.roadmap.roadmap_manager import RoadmapManager
-from octomaster.utils.config import Config
+from gitcompass.auth.github_auth import GitHubAuth
+from gitcompass.issues.issue_manager import IssueManager
+from gitcompass.projects.project_manager import ProjectManager
+from gitcompass.roadmap.roadmap_manager import RoadmapManager
+from gitcompass.utils.config import Config
 
 # Note: Package will be renamed to gitcompass but internal imports remain the same
 # until directory structure is updated
@@ -226,7 +225,7 @@ def generate_report(repo, output):
 @main.command("version")
 def version():
     """Show the GitCompass version."""
-    from octomaster import __version__
+    from gitcompass import __version__
 
     click.echo(f"GitCompass version {__version__}")
 

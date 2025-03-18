@@ -1,4 +1,4 @@
-name: Publish OctoMaster to PyPI
+name: Publish GitCompass to PyPI
 
 on:
   release:
