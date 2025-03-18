@@ -182,7 +182,7 @@ logging:
 
 ## API Settings
 
-Configure how OctoMaster interacts with the GitHub API:
+Configure how GitCompass interacts with the GitHub API:
 
 ```yaml
 api:

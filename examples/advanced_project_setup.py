@@ -15,11 +15,11 @@ import datetime
 # Add src directory to path for running directly from examples
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.octomaster.auth.github_auth import GitHubAuth
-from src.octomaster.issues.issue_manager import IssueManager
-from src.octomaster.projects.project_manager import ProjectManager
-from src.octomaster.roadmap.roadmap_manager import RoadmapManager
-from src.octomaster.utils.config import Config
+from src.gitcompass.auth.github_auth import GitHubAuth
+from src.gitcompass.issues.issue_manager import IssueManager
+from src.gitcompass.projects.project_manager import ProjectManager
+from src.gitcompass.roadmap.roadmap_manager import RoadmapManager
+from src.gitcompass.utils.config import Config
 
 def setup_project(repo, project_name, milestones, feature_sets):
     """Set up a complete project with roadmap and issues.

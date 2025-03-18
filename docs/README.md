@@ -1,8 +1,8 @@
-# OctoMaster Documentation
+# GitCompass Documentation
 
 ## Introduction
 
-OctoMaster is a comprehensive Python-based tool for managing GitHub projects, issues, sub-issues, and roadmaps. It provides a robust alternative to bash scripts with better error handling, cross-platform support, and access to the full GitHub API.
+GitCompass is a comprehensive Python-based tool for managing GitHub projects, issues, sub-issues, and roadmaps. It provides a robust alternative to bash scripts with better error handling, cross-platform support, and access to the full GitHub API.
 
 ## Installation
 
@@ -20,9 +20,9 @@ pip install -e .
 
 ## Configuration
 
-OctoMaster can be configured using:
+GitCompass can be configured using:
 
-1. Environment variables (prefixed with `OCTOMASTER_`)
+1. Environment variables (prefixed with `GITCOMPASS_`)
 2. Configuration files
 3. Command-line parameters
 
@@ -31,8 +31,8 @@ OctoMaster can be configured using:
 Create a configuration file at one of these locations:
 
 1. Current directory: `config.yaml`
-2. User home directory: `~/.octomaster/config.yaml`
-3. Custom location, set with `OCTOMASTER_CONFIG` environment variable
+2. User home directory: `~/.gitcompass/config.yaml`
+3. Custom location, set with `GITCOMPASS_CONFIG` environment variable
 
 Example configuration file (`config.yaml`):
 
@@ -70,39 +70,39 @@ export GITHUB_TOKEN=your-github-token
 
 ```bash
 # Create an issue
-octomaster issues create --repo owner/repo --title "Issue title" --body "Issue description"
+gitcompass issues create --repo owner/repo --title "Issue title" --body "Issue description"
 
 # Create a sub-issue
-octomaster issues create --repo owner/repo --title "Sub-issue title" --parent 123
+gitcompass issues create --repo owner/repo --title "Sub-issue title" --parent 123
 
 # Convert tasks to sub-issues
-octomaster issues convert-tasks --repo owner/repo --issue 123
+gitcompass issues convert-tasks --repo owner/repo --issue 123
 ```
 
 ### Managing Projects
 
 ```bash
 # Create a project
-octomaster projects create --name "Project Name" --repo owner/repo
+gitcompass projects create --name "Project Name" --repo owner/repo
 
 # Create a project with advanced template
-octomaster projects create --name "Detailed Project" --template advanced --org your-org
+gitcompass projects create --name "Detailed Project" --template advanced --org your-org
 
 # Add issue to project
-octomaster projects add-issue --project-id 12345 --repo owner/repo --issue 123 --column "To Do"
+gitcompass projects add-issue --project-id 12345 --repo owner/repo --issue 123 --column "To Do"
 ```
 
 ### Managing Roadmaps
 
 ```bash
 # Create a milestone
-octomaster roadmap create --repo owner/repo --title "v1.0 Release" --due-date 2023-12-31
+gitcompass roadmap create --repo owner/repo --title "v1.0 Release" --due-date 2023-12-31
 
 # Generate roadmap report
-octomaster roadmap report --repo owner/repo
+gitcompass roadmap report --repo owner/repo
 
 # Save roadmap report to file
-octomaster roadmap report --repo owner/repo --output roadmap.md
+gitcompass roadmap report --repo owner/repo --output roadmap.md
 ```
 
 ## Dry Run Mode
@@ -110,17 +110,17 @@ octomaster roadmap report --repo owner/repo --output roadmap.md
 Most commands support a `--dry-run` (or `-d`) flag to show what would be done without making actual changes:
 
 ```bash
-octomaster issues create --repo owner/repo --title "Test Issue" --dry-run
+gitcompass issues create --repo owner/repo --title "Test Issue" --dry-run
 ```
 
 ## Python API Usage
 
-OctoMaster can also be used as a Python library:
+GitCompass can also be used as a Python library:
 
 ```python
-from octomaster.auth.github_auth import GitHubAuth
-from octomaster.issues.issue_manager import IssueManager
-from octomaster.utils.config import Config
+from gitcompass.auth.github_auth import GitHubAuth
+from gitcompass.issues.issue_manager import IssueManager
+from gitcompass.utils.config import Config
 
 # Initialize configuration and authentication
 config = Config()
@@ -144,7 +144,7 @@ print(f"Created issue #{issue['number']}")
 
 ## Error Handling
 
-OctoMaster provides informative error messages and handles GitHub API rate limiting. If a command fails, the error message will provide details about what went wrong and how to fix it.
+GitCompass provides informative error messages and handles GitHub API rate limiting. If a command fails, the error message will provide details about what went wrong and how to fix it.
 
 ## Troubleshooting
 

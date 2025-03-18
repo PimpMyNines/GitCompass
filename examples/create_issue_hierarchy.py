@@ -14,9 +14,9 @@ import sys
 # Add src directory to path for running directly from examples
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.octomaster.auth.github_auth import GitHubAuth
-from src.octomaster.issues.issue_manager import IssueManager
-from src.octomaster.utils.config import Config
+from src.gitcompass.auth.github_auth import GitHubAuth
+from src.gitcompass.issues.issue_manager import IssueManager
+from src.gitcompass.utils.config import Config
 
 def create_issue_hierarchy(repo, parent_title, sub_issues):
     """Create a parent issue with multiple sub-issues.
