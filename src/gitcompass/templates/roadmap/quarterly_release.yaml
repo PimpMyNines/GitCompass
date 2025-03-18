@@ -1,0 +1,44 @@
+name: Quarterly Release Plan
+description: A template for planning quarterly releases with milestones
+timeframes:
+  - name: Planning Phase
+    duration: 2 weeks
+    description: Requirements gathering and planning
+  - name: Development Phase
+    duration: 6 weeks
+    description: Main development period
+  - name: Testing Phase
+    duration: 2 weeks
+    description: QA and UAT testing
+  - name: Release Phase
+    duration: 2 weeks
+    description: Deployment and post-release monitoring
+milestones:
+  - name: "{quarter} Planning Complete"
+    description: "Planning phase completed for {quarter} release cycle"
+    relative_date: "+2 weeks"
+  - name: "{quarter} Feature Freeze"
+    description: "Feature freeze for {quarter} release"
+    relative_date: "+8 weeks"
+  - name: "{quarter} Release Candidate"
+    description: "Release candidate for {quarter} release"
+    relative_date: "+10 weeks"
+  - name: "{quarter} Release"
+    description: "Official {quarter} release"
+    relative_date: "+12 weeks"
+labels:
+  - name: "{quarter}"
+    color: "5319E7"
+    description: "Tasks for {quarter} release"
+  - name: "{quarter}:planning"
+    color: "BFDADC"
+    description: "Planning tasks for {quarter} release"
+  - name: "{quarter}:feature"
+    color: "1D76DB"
+    description: "Feature development for {quarter} release"
+  - name: "{quarter}:testing"
+    color: "FBCA04"
+    description: "Testing tasks for {quarter} release"
+  - name: "{quarter}:release"
+    color: "0E8A16"
+    description: "Release tasks for {quarter} release"

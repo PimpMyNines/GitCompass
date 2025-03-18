@@ -15,7 +15,10 @@ def mock_config():
     config = MagicMock(spec=Config)
     config.get.return_value = "test-token"
     config.has.return_value = True
-    return config
+    
+    # Ensure that environment variable doesn't interfere with tests
+    with patch.dict(os.environ, {"GITHUB_TOKEN": ""}, clear=True):
+        yield config
 
 
 @pytest.fixture

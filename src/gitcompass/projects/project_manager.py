@@ -91,6 +91,60 @@ class ProjectManager:
         project.create_column("Review")
         project.create_column("Testing")
         project.create_column("Done")
+        
+    def create_project_with_columns(
+        self,
+        name: str,
+        body: str = "",
+        org: Optional[str] = None,
+        repo: Optional[str] = None,
+        columns: List[Any] = None,
+    ) -> Dict[str, Any]:
+        """Create a new GitHub project with custom columns.
+
+        Args:
+            name: Project name
+            body: Project description
+            org: Organization name (if creating org project)
+            repo: Repository name (if creating repo project)
+            columns: List of column names or column objects with settings
+
+        Returns:
+            Dictionary with project information
+        """
+        # Determine if this is an org, repo, or user project
+        if org:
+            # Create org project
+            organization = self.github.get_organization(org)
+            project = organization.create_project(name=name, body=body)
+        elif repo:
+            # Create repo project
+            repository = self.github.get_repo(repo)
+            project = repository.create_project(name=name, body=body)
+        else:
+            # Create user project
+            user = self.github.get_user()
+            project = user.create_project(name=name, body=body)
+
+        # Add custom columns
+        if columns:
+            for column in columns:
+                if isinstance(column, dict):
+                    # If column is a dictionary, extract name and additional settings
+                    column_name = column.get("name", "Unnamed Column")
+                    # Could handle additional column settings here
+                    project.create_column(column_name)
+                else:
+                    # If column is a string or other value, convert to string
+                    project.create_column(str(column))
+
+        return {
+            "id": project.id,
+            "name": project.name,
+            "body": project.body,
+            "html_url": project.html_url,
+            "columns": self._get_project_columns(project),
+        }
 
     def _get_project_columns(self, project: github.Project.Project) -> List[Dict[str, Any]]:
         """Get project columns.
