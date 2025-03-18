@@ -219,3 +219,14 @@ class RoadmapManager:
             "due_on": milestone.due_on.isoformat() if milestone.due_on else None,
             "html_url": milestone.html_url,
         }
+        
+    def delete_milestone(self, repo: str, milestone_number: int) -> None:
+        """Delete a milestone.
+
+        Args:
+            repo: Repository name in format "owner/repo"
+            milestone_number: Milestone number to delete
+        """
+        repository = self.github.get_repo(repo)
+        milestone = repository.get_milestone(milestone_number)
+        milestone.delete()

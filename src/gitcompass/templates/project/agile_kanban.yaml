@@ -1,0 +1,28 @@
+name: Agile Kanban Board
+description: A project board template with columns optimized for Agile/Kanban workflow
+columns:
+  - name: Backlog
+    description: Ideas and tasks that haven't been prioritized yet
+  - name: To Do
+    description: Tasks that are ready to be worked on
+  - name: In Progress
+    description: Tasks that are currently being worked on
+  - name: Code Review
+    description: Code that needs review before merging
+  - name: QA Testing
+    description: Features that need testing before release
+  - name: Done
+    description: Completed tasks
+automation:
+  new_issues: Backlog  # Automatically add new issues to Backlog
+  closed_issues: Done  # Automatically move closed issues to Done
+labels:
+  - name: priority:high
+    color: "D93F0B"
+    description: High priority items that need immediate attention
+  - name: priority:medium
+    color: "FBCA04"
+    description: Medium priority items
+  - name: priority:low
+    color: "0E8A16"
+    description: Low priority items

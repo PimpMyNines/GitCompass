@@ -6,11 +6,13 @@ This example demonstrates how to:
 1. Create a GitHub project
 2. Set up a roadmap with milestones
 3. Create and organize issues in the project
+4. Optionally delete all test resources after verification
 """
 
 import os
 import sys
 import datetime
+import argparse
 
 # Add src directory to path for running directly from examples
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -21,7 +23,7 @@ from src.gitcompass.projects.project_manager import ProjectManager
 from src.gitcompass.roadmap.roadmap_manager import RoadmapManager
 from src.gitcompass.utils.config import Config
 
-def setup_project(repo, project_name, milestones, feature_sets):
+def setup_project(repo, project_name, milestones, feature_sets, cleanup=False):
     """Set up a complete project with roadmap and issues.
     
     Args:
@@ -29,6 +31,7 @@ def setup_project(repo, project_name, milestones, feature_sets):
         project_name: Name for the project board
         milestones: List of milestone dictionaries (title, description, due_date)
         feature_sets: Dictionary of features to add (milestone_title -> features)
+        cleanup: If True, delete all created resources after setup
     """
     # Initialize managers
     config = Config()
@@ -36,6 +39,13 @@ def setup_project(repo, project_name, milestones, feature_sets):
     issue_manager = IssueManager(auth)
     project_manager = ProjectManager(auth)
     roadmap_manager = RoadmapManager(auth)
+    
+    # Track created resources for cleanup
+    created_resources = {
+        "project_id": None,
+        "milestones": [],
+        "issues": []
+    }
     
     try:
         # 1. Create the project
@@ -47,6 +57,7 @@ def setup_project(repo, project_name, milestones, feature_sets):
             template="advanced"  # Use advanced template with more columns
         )
         print(f"Created project: {project['name']} (ID: {project['id']})")
+        created_resources["project_id"] = project["id"]
         
         # Store column info for later use
         columns = {column["name"]: column["id"] for column in project["columns"]}
@@ -64,6 +75,7 @@ def setup_project(repo, project_name, milestones, feature_sets):
                 description=ms["description"]
             )
             milestone_map[ms["title"]] = milestone["number"]
+            created_resources["milestones"].append(milestone["number"])
             print(f"  - Created milestone: {milestone['title']} (Due: {milestone['due_on']})")
         
         # 3. Create issues for each feature set
@@ -85,6 +97,7 @@ def setup_project(repo, project_name, milestones, feature_sets):
                     milestone=milestone_id
                 )
                 print(f"  - Created issue #{issue['number']}: {issue['title']}")
+                created_resources["issues"].append(issue["number"])
                 
                 # Add to project in appropriate column
                 column = feature.get("column", "To Do")
@@ -118,6 +131,10 @@ def setup_project(repo, project_name, milestones, feature_sets):
                         labels=["task"]
                     )
                     
+                    # Track sub-issues for cleanup
+                    for sub_issue in sub_issues:
+                        created_resources["issues"].append(sub_issue["number"])
+                    
                     print(f"    Created {len(sub_issues)} sub-issues")
         
         # 4. Generate and print roadmap report
@@ -125,19 +142,76 @@ def setup_project(repo, project_name, milestones, feature_sets):
         report = roadmap_manager.generate_roadmap_report(repo)
         print("\n" + report)
         
+        # 5. Cleanup resources if requested
+        if cleanup:
+            print("\n=== CLEANING UP TEST RESOURCES ===")
+            cleanup_resources(repo, created_resources, issue_manager, project_manager, roadmap_manager)
+        
         return {
             "project": project,
-            "milestones": milestone_map
+            "milestones": milestone_map,
+            "created_resources": created_resources
         }
         
     except Exception as e:
         print(f"Error: {str(e)}")
+        # Attempt cleanup on error if requested
+        if cleanup and created_resources:
+            print("\n=== CLEANING UP RESOURCES AFTER ERROR ===")
+            cleanup_resources(repo, created_resources, issue_manager, project_manager, roadmap_manager)
         sys.exit(1)
 
+def cleanup_resources(repo, resources, issue_manager, project_manager, roadmap_manager):
+    """Delete all resources created during the test.
+    
+    Args:
+        repo: Repository in format owner/repo
+        resources: Dictionary of created resource IDs/numbers
+        issue_manager: Initialized IssueManager
+        project_manager: Initialized ProjectManager
+        roadmap_manager: Initialized RoadmapManager
+    """
+    # Delete issues (including sub-issues)
+    if resources.get("issues"):
+        print(f"Deleting {len(resources['issues'])} issues...")
+        for issue_number in sorted(resources["issues"], reverse=True):
+            try:
+                issue_manager.close_issue(repo, issue_number)
+                print(f"  - Closed issue #{issue_number}")
+            except Exception as e:
+                print(f"  - Failed to close issue #{issue_number}: {str(e)}")
+    
+    # Delete milestones
+    if resources.get("milestones"):
+        print(f"Deleting {len(resources['milestones'])} milestones...")
+        for milestone_number in resources["milestones"]:
+            try:
+                roadmap_manager.delete_milestone(repo, milestone_number)
+                print(f"  - Deleted milestone #{milestone_number}")
+            except Exception as e:
+                print(f"  - Failed to delete milestone #{milestone_number}: {str(e)}")
+    
+    # Delete project
+    if resources.get("project_id"):
+        try:
+            project_manager.delete_project(resources["project_id"])
+            print(f"Deleted project (ID: {resources['project_id']})")
+        except Exception as e:
+            print(f"Failed to delete project: {str(e)}")
+    
+    print("Cleanup complete")
+
 if __name__ == "__main__":
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Set up a GitHub project with issues and roadmap for testing")
+    parser.add_argument("--repo", type=str, default="owner/repo", help="Repository in format owner/repo")
+    parser.add_argument("--name", type=str, default="GitCompass End-to-End Test", help="Project name")
+    parser.add_argument("--cleanup", action="store_true", help="Clean up all resources after creation")
+    args = parser.parse_args()
+    
     # Configuration
-    REPO = "owner/repo"  # Replace with your repository
-    PROJECT_NAME = "Q3 Development"
+    REPO = args.repo
+    PROJECT_NAME = args.name
     
     # Define milestones for the roadmap
     MILESTONES = [
@@ -228,5 +302,10 @@ if __name__ == "__main__":
         ]
     }
     
-    # Run the project setup
-    setup_project(REPO, PROJECT_NAME, MILESTONES, FEATURE_SETS)
+    print(f"Setting up test project in repository: {REPO}")
+    print(f"Project name: {PROJECT_NAME}")
+    print(f"Cleanup mode: {'Enabled' if args.cleanup else 'Disabled'}")
+    print("")
+    
+    # Run the project setup with optional cleanup
+    setup_project(REPO, PROJECT_NAME, MILESTONES, FEATURE_SETS, cleanup=args.cleanup)

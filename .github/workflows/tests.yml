@@ -1,4 +1,4 @@
-name: OctoMaster Tests
+name: GitCompass Tests
 
 on:
   push:

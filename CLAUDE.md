@@ -1,387 +1,64 @@
-# GitCompass Project Guide for Claude
+# GitCompass - Essential Guide
 
-This guide contains useful information for AI assistants working on the GitCompass project.
-
-## Project Overview
-
-GitCompass is a Python-based GitHub project management tool that provides comprehensive management for GitHub projects, issues, sub-issues, and roadmaps. It replaces bash scripts with a more robust Python solution.
-
-## Development Environment
-
-### Installation
+## Key Commands
 
 ```bash
-# Clone the repository
-git clone https://github.com/PimpMyNines/gitcompass.git
+# Setup & Development
+make develop      # Install in development mode
+make lint         # Lint code (run before committing)
+make test         # Run tests
+make coverage     # Tests with coverage report
+make format       # Auto-format code with black
 
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install in development mode
-pip install -e .
-
-# Install development dependencies
-pip install -e ".[dev]"
-# Or use make
-make develop
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-python -m pytest
-
-# Run specific tests
-python -m pytest tests/unit/test_config.py
-
-# Run with coverage
-python -m pytest --cov=src/gitcompass
-```
-
-### Common Development Tasks and Commands
-
-```bash
-# Format code
-make format
-
-# Run linting
-make lint
-
-# Run tests
-make test
-
-# Run tests with coverage
-make coverage
-
-# Build Docker image
-make docker-build
-
-# Run Docker container
-make docker-run
-
-# Clean up build artifacts
-make clean
-
-# Build distribution package
-make dist
-
-# Install in development mode
-make install
-
-# Install development dependencies
-make develop
+# Build & Distribution
+make dist         # Build distribution packages
+make docker-build # Build Docker image
 ```
 
 ## Project Structure
 
-- `src/gitcompass/` - Main package code (Note: transitioning from octomaster)
-  - `auth/` - Authentication handling
-  - `issues/` - Issue management
-  - `projects/` - Project management
-  - `roadmap/` - Roadmap/milestone handling
-  - `utils/` - Utility functions
-  - `cli.py` - Command-line interface
-
-- `tests/` - Test suite
-  - `unit/` - Unit tests
-  - `integration/` - Integration tests
-
-- `docs/` - Documentation
-- `examples/` - Example scripts
-- `config/` - Configuration examples
-
-## CLI Commands
-
-Here are the main CLI commands available in GitCompass:
-
-```bash
-# Get help
-gitcompass --help
-
-# Get version
-gitcompass version
-
-# Create an issue
-gitcompass issues create --repo owner/repo --title "Issue title" --body "Description"
-
-# Create a sub-issue
-gitcompass issues create --repo owner/repo --title "Sub-issue title" --parent 123
-
-# Convert tasks to sub-issues
-gitcompass issues convert-tasks --repo owner/repo --issue 123
-
-# Create a project
-gitcompass projects create --name "Project Name" --repo owner/repo
-
-# Create a milestone
-gitcompass roadmap create --repo owner/repo --title "v1.0" --due-date 2023-12-31
-
-# Generate roadmap report
-gitcompass roadmap report --repo owner/repo
+```
+src/gitcompass/       # Main package
+├── auth/             # Authentication modules
+├── issues/           # Issue management 
+├── projects/         # Project management
+├── roadmap/          # Roadmap & milestones
+└── utils/            # Shared utilities & config
 ```
 
-## GitHub Authentication
-
-For GitHub operations, you need to set up authentication using one of these methods:
+## Authentication
 
 ```bash
-# Method 1: Set environment variable
+# Option 1: Environment variable
 export GITHUB_TOKEN=your-github-token
 
-# Method 2: Configure in ~/.gitcompass/config.yaml
+# Option 2: Config file (~/.gitcompass/config.yaml)
 auth:
   token: "your-github-token"
+  # Optional: GitHub Enterprise settings
+  api_url: "https://github.example.com/api/v3"
 ```
 
-## Troubleshooting
-
-- **Issue**: Import errors when running the CLI
-  **Solution**: Make sure the package is installed in development mode with `make install` or `make develop`
-
-- **Issue**: GitHub API authentication failures
-  **Solution**: Check that GITHUB_TOKEN is set or configured properly
-
-- **Issue**: Tests fail with module not found errors
-  **Solution**: Ensure you're running from the project root and have installed dev dependencies with `make develop`
-
-- **Issue**: Tests fail with `AssertionError: assert 'github_pat_...' == 'test-token'`
-  **Solution**: These are expected failures in test_github_auth.py which checks for a hardcoded test token
-
-- **Issue**: Linting errors when running `make lint`
-  **Solution**: Run `make format` first to fix formatting issues, remaining errors should be addressed manually
-
-## Repository Structure Best Practices
-
-When working with this codebase, follow these best practices:
-
-1. **Package Imports**: Always use the new `gitcompass` namespace in new code or documentation:
-   ```python
-   from gitcompass.auth.github_auth import GitHubAuth
-   ```
-
-2. **File Organization**:
-   - Logic should be modular and segregated by functionality (auth, issues, projects, roadmap)
-   - Utilities should go in the utils directory
-   - Keep modules focused on a single responsibility
-
-3. **Testing**: 
-   - Add unit tests for all new functionality
-   - Test files should mirror the structure of the source files
-   - Use pytest fixtures where appropriate
-
-## CI/CD and Release Process
-
-### GitHub Actions Workflows
-
-The project uses GitHub Actions for CI/CD with the following workflows. All workflows are configured to use the Makefile commands for consistency between local development and CI environments.
-
-- **tests.yml**: Runs tests, linting, and Docker builds on PR and push events
-  ```bash
-  # Manually trigger tests
-  gh workflow run "GitCompass Tests"
-  ```
-
-- **publish.yml**: Publishes package to PyPI when releases are created
-  ```bash
-  # Manual publish to TestPyPI
-  gh workflow run "Publish GitCompass to PyPI" -f version=1.0.0
-  ```
-
-- **release.yml**: Creates new releases with version bumping and changelog generation
-  ```bash
-  # Create a new release
-  gh workflow run "Create Release" -f version=1.0.0
-  ```
-
-### Required Repository Secrets
-
-For the CI/CD pipelines to work, these secrets should be configured:
-- `PYPI_API_TOKEN`: Token for publishing to PyPI
-- `TEST_PYPI_API_TOKEN`: Token for publishing to TestPyPI
-- `CODECOV_TOKEN`: Token for uploading coverage reports
-
-### Release Process
-
-1. Ensure all changes are merged to main
-2. Trigger the "Create Release" workflow with the new version
-3. The workflow will:
-   - Update version in pyproject.toml
-   - Create git tag
-   - Generate changelog
-   - Create GitHub release
-   - Trigger the publish workflow
-
-## Pull Request Process
-
-When submitting a PR, follow these steps:
-
-1. Create a feature branch
-2. Make changes and test them
-3. Push to GitHub
-4. Create PR with a descriptive title and body
-5. Reference the PR description file: `PR_DESCRIPTION.md`
-
-## Code Style Conventions
-
-- Use type hints for all function parameters and return values
-- Follow black formatting (line length 100)
-- Use docstrings for all public methods and functions
-- Include doctest examples in docstrings when applicable
-- Use snake_case for variables and function names
-- Use CamelCase for class names
-
-## Building and Publishing
-
-Use the Makefile targets for building and installation whenever possible:
-
-```bash
-# Build package locally
-make dist
-
-# Install locally in development mode
-make install
-
-# Install with development dependencies
-make develop
-
-# Check built distribution
-twine check dist/*
-
-# Upload to TestPyPI (for testing)
-twine upload --repository testpypi dist/*
-
-# Upload to PyPI (for production)
-twine upload dist/*
-```
-
-## Useful Resources
-
-- [PyGithub Documentation](https://pygithub.readthedocs.io/en/latest/)
-- [Click Documentation](https://click.palletsprojects.com/)
-- [GitHub API Documentation](https://docs.github.com/en/rest)
-- [Python Packaging User Guide](https://packaging.python.org/guides/distributing-packages-using-setuptools/)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-
-## Important Project Conventions
-
-### Makefile Integration
-
-All development tasks and CI/CD workflows should use the Makefile commands whenever possible:
-
-- Local development should use `make` commands instead of direct Python calls 
-- GitHub Actions workflows are configured to use Makefile targets for consistency
-- When adding new functionality, consider adding appropriate Makefile targets
-
-## Project Renaming History
-
-The project was originally named "OctoMaster" but was renamed to "GitCompass" to better reflect its purpose as a navigation and roadmapping tool for GitHub projects. This renaming was completed in March 2025. The repository URL was also updated from "github-project-management" to "gitcompass".
-
-If you find any remaining references to "OctoMaster" or "octomaster" in the codebase, these should be updated to "GitCompass" or "gitcompass" respectively.
-
-## Directory Structure Transition
-
-The Python package renaming from `octomaster` to `gitcompass` was completed on March 17, 2025. All source code, imports, configurations, and references have been updated.
-
-### Renaming Status
-
-As of March 17, 2025, the following changes have been completed:
-- Package name in pyproject.toml changed to "gitcompass"
-- Command-line interface renamed to "gitcompass"
-- Configuration path updated to ~/.gitcompass/
-- All imports in documentation and examples updated to reference gitcompass
-- All documentation and README files updated to reference GitCompass
-- Directory structure renamed from src/octomaster/ to src/gitcompass/
-- All internal imports updated to use the gitcompass namespace
-- All test files updated to reference gitcompass
-- References to octomaster in Makefile and other configuration files updated
-- No OCTOMASTER_* environment variables were found (already replaced by GITCOMPASS_*)
-
-### Key Lessons from Renaming Process
-
-1. **Order Matters**: When renaming a package, first copy the directory structure with new name, then update all imports, then remove the old directory once everything is working
-  
-2. **Import Path Management**: When doing a major rename, create a parallel directory structure first before replacing the old one, to ensure a smooth transition
-
-3. **Testing After Renaming**: After a major rename like this, run the full test suite and check for any import errors
-
-4. **Version Control**: Commit frequently during the process to enable rollback if issues arise
-
-When working with this codebase, all paths and imports now consistently use the GitCompass naming. If you find any instances of "octomaster" in the codebase, they should be treated as bugs and fixed immediately.
-
-## Common Issues and Solutions
-
-### Import Errors
-If you encounter import errors, make sure all imports use the `gitcompass` namespace. The transition from octomaster to gitcompass was completed on March 17, 2025, so all imports should consistently use the new namespace.
-
-### Path References
-All configuration paths should use the ~/.gitcompass/ directory structure. There should be no references to ~/.octomaster/ in the codebase.
-
-### GitHub API Issues
-- **Rate Limiting**: If you hit rate limits, the API will return 403 errors. The tool handles this with exponential backoff.
-- **Authentication**: Always check the GITHUB_TOKEN or the config.yaml file if authentication fails.
-
-## Note to Future AI Assistants
-
-If you discover any information that would benefit future agents working on this project, please add it to this CLAUDE.md file. This includes:
-
-1. Useful commands for development, testing, or deployment
-2. Project-specific workflows or patterns
-3. Common issues and their solutions
-4. Dependencies and their purposes
-5. Updates to the CI/CD process
-6. Changes to Makefile targets or GitHub Actions workflows
-7. Best practices for working with GitHub's API
-8. Design patterns used in the codebase
-9. Performance optimizations and architectural improvements
-
-### Incremental Documentation
-
-When you make significant changes to the codebase or learn important information about the project structure, ALWAYS update this CLAUDE.md file with that information. This helps create an accurate, evolving knowledge base for future AI assistants.
-
-Some guidelines for maintaining this documentation:
-- Keep information organized in the appropriate sections
-- Include specific commands, code snippets, and examples when possible
-- Document any non-obvious architectural decisions or complex subsystems
-- Note any recurring patterns in the codebase that should be followed
-- When fixing bugs, document the underlying cause and solution pattern
-- ALWAYS prefer updating CLAUDE.md rather than leaving information only in conversation history
-
-### Key Lessons from Package Renaming
-
-The migration from OctoMaster to GitCompass in March 2025 revealed several important practices:
-
-1. **Linting Configuration**: When working with Python projects, check for `.flake8` configuration files. If modifications are needed (like line length adjustments), update the config file rather than modifying the code to fit restrictive defaults.
-
-2. **Import Optimization**: The codebase prefers minimizing imports. Remove any unused imports found with `F401` flake8 errors, and import only what's needed rather than using broad imports.
-
-3. **Dynamic Path Resolution**: Always use dynamic path resolution rather than hardcoded paths:
-   ```python
-   # Good
-   os.path.join(os.path.dirname(os.path.abspath(__file__)), "relative/path")
-   
-   # Bad
-   "/Users/username/Projects/GitCompass/path"
-   ```
-
-4. **Handling Long Lines**: When encountering long lines that exceed line length limits:
-   - Break variable assignments into multiple steps
-   - Use continued lines with proper indentation
-   - Example: 
-     ```python
-     # Instead of this long line:
-     report += f"({milestone['closed_issues']}/{milestone['closed_issues'] + milestone['open_issues']} issues closed)"
-     
-     # Do this:
-     total = milestone['closed_issues'] + milestone['open_issues']
-     report += f"({milestone['closed_issues']}/{total} issues closed)"
-     ```
-
-As the project evolves, this documentation should grow alongside it, making it easier for new contributors and AI assistants to quickly understand and work with the codebase.
-
-Always maintain this file's organization and clarity to help future agents assist users more effectively. When working on the project, follow the established conventions and update this document if you learn something that would be useful to future agents.
-
-Never include credits to yourself in commit messages or code comments unless specifically requested.
-
-Add detailed information rather than being vague - specific commands, error messages, and solutions are much more helpful than general advice.
+## Code Style
+
+- Use type hints consistently
+- Black formatting (line length 100)
+- Snake_case for variables/functions, CamelCase for classes
+- All classes should have docstrings
+- New features require unit tests
+- Main modules: auth, issues, projects, roadmap
+
+## Common Solutions
+
+- Import paths: `from gitcompass.module import Class` (not src.gitcompass)
+- API mocking: Use fixtures in `tests/conftest.py` for unit tests
+- Rate limiting: The auth module handles retries with exponential backoff
+- Default repo: Set `default_repo: "owner/repo"` in config.yaml
+- Logging: Configure in ~/.gitcompass/config.yaml (level INFO by default)
+
+## Test Data Patterns
+
+- Test fixtures in tests/conftest.py
+- Mock responses in tests/fixtures/
+- All API tests should handle non-deterministic data
+- Use Pytest parametrize for testing edge cases

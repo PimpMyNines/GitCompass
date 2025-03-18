@@ -260,3 +260,15 @@ class IssueManager:
             "html_url": issue.html_url,
             "updated_at": issue.updated_at.isoformat(),
         }
+        
+    def close_issue(self, repo: str, issue_number: int) -> Dict[str, Any]:
+        """Close an issue.
+
+        Args:
+            repo: Repository name in format "owner/repo"
+            issue_number: Issue number to close
+
+        Returns:
+            Updated issue information
+        """
+        return self.update_issue(repo, issue_number, state="closed")
