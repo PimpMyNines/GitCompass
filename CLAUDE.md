@@ -40,7 +40,7 @@ python -m pytest tests/unit/test_config.py
 python -m pytest --cov=src/gitcompass
 ```
 
-### Common Development Tasks
+### Common Development Tasks and Commands
 
 ```bash
 # Format code
@@ -151,6 +151,25 @@ auth:
 
 - **Issue**: Linting errors when running `make lint`
   **Solution**: Run `make format` first to fix formatting issues, remaining errors should be addressed manually
+
+## Repository Structure Best Practices
+
+When working with this codebase, follow these best practices:
+
+1. **Package Imports**: Always use the new `gitcompass` namespace in new code or documentation:
+   ```python
+   from gitcompass.auth.github_auth import GitHubAuth
+   ```
+
+2. **File Organization**:
+   - Logic should be modular and segregated by functionality (auth, issues, projects, roadmap)
+   - Utilities should go in the utils directory
+   - Keep modules focused on a single responsibility
+
+3. **Testing**: 
+   - Add unit tests for all new functionality
+   - Test files should mirror the structure of the source files
+   - Use pytest fixtures where appropriate
 
 ## CI/CD and Release Process
 
@@ -265,6 +284,34 @@ If you find any remaining references to "OctoMaster" or "octomaster" in the code
 
 The Python package is still transitioning from the `octomaster` directory structure to `gitcompass`. While imports in external code (README examples, documentation) have been updated to use `from gitcompass.xxx import yyy`, the actual directory may still be `src/octomaster/` until the transition is complete. Internal imports may still use `from octomaster.xxx import yyy` until the directory is renamed.
 
+### Renaming Status
+
+As of March 2025, the following changes have been completed:
+- Package name in pyproject.toml changed to "gitcompass"
+- Command-line interface renamed to "gitcompass"
+- Configuration path updated to ~/.gitcompass/
+- All imports in documentation and examples updated to reference gitcompass
+- All documentation and README files updated to reference GitCompass
+
+The following still needs to be completed:
+- Rename the src/octomaster/ directory to src/gitcompass/
+- Update internal imports within the codebase
+- Remove any remaining environment variable references to OCTOMASTER_*
+
+When working with this codebase, be aware that there may be a mix of old and new references. Always check the actual paths and imports in the files you're working with.
+
+## Common Issues and Solutions
+
+### Import Errors
+If you encounter import errors related to the package structure, remember that the project is in transition from octomaster to gitcompass. Check if you need to update import paths or if the directory structure differs from what's expected.
+
+### Path References
+When dealing with file paths, especially in configuration settings, ensure you're using the new ~/.gitcompass/ directory structure instead of the old ~/.octomaster/ paths.
+
+### GitHub API Issues
+- **Rate Limiting**: If you hit rate limits, the API will return 403 errors. The tool handles this with exponential backoff.
+- **Authentication**: Always check the GITHUB_TOKEN or the config.yaml file if authentication fails.
+
 ## Note to Future AI Assistants
 
 If you discover any information that would benefit future agents working on this project, please add it to this CLAUDE.md file. This includes:
@@ -276,7 +323,11 @@ If you discover any information that would benefit future agents working on this
 5. Updates to the CI/CD process
 6. Changes to Makefile targets or GitHub Actions workflows
 7. Status of the transition from octomaster to gitcompass directory structure
+8. Best practices for working with GitHub's API
+9. Design patterns used in the codebase
 
 Always maintain this file's organization and clarity to help future agents assist users more effectively. When working on the project, follow the established conventions and update this document if you learn something that would be useful to future agents.
 
 Never include credits to yourself in commit messages or code comments unless specifically requested.
+
+Add detailed information rather than being vague - specific commands, error messages, and solutions are much more helpful than general advice.
