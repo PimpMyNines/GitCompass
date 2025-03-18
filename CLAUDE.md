@@ -12,7 +12,7 @@ GitCompass is a Python-based GitHub project management tool that provides compre
 
 ```bash
 # Clone the repository
-git clone https://github.com/PimpMyNines/github-project-management.git
+git clone https://github.com/PimpMyNines/gitcompass.git
 
 # Create and activate a virtual environment
 python -m venv venv
@@ -37,7 +37,7 @@ python -m pytest
 python -m pytest tests/unit/test_config.py
 
 # Run with coverage
-python -m pytest --cov=src/octomaster
+python -m pytest --cov=src/gitcompass
 ```
 
 ### Common Development Tasks
@@ -76,7 +76,7 @@ make develop
 
 ## Project Structure
 
-- `src/octomaster/` - Main package code
+- `src/gitcompass/` - Main package code (Note: transitioning from octomaster)
   - `auth/` - Authentication handling
   - `issues/` - Issue management
   - `projects/` - Project management
@@ -161,13 +161,13 @@ The project uses GitHub Actions for CI/CD with the following workflows. All work
 - **tests.yml**: Runs tests, linting, and Docker builds on PR and push events
   ```bash
   # Manually trigger tests
-  gh workflow run "OctoMaster Tests"
+  gh workflow run "GitCompass Tests"
   ```
 
 - **publish.yml**: Publishes package to PyPI when releases are created
   ```bash
   # Manual publish to TestPyPI
-  gh workflow run "Publish OctoMaster to PyPI" -f version=1.0.0
+  gh workflow run "Publish GitCompass to PyPI" -f version=1.0.0
   ```
 
 - **release.yml**: Creates new releases with version bumping and changelog generation
@@ -255,6 +255,16 @@ All development tasks and CI/CD workflows should use the Makefile commands whene
 - GitHub Actions workflows are configured to use Makefile targets for consistency
 - When adding new functionality, consider adding appropriate Makefile targets
 
+## Project Renaming History
+
+The project was originally named "OctoMaster" but was renamed to "GitCompass" to better reflect its purpose as a navigation and roadmapping tool for GitHub projects. This renaming was completed in March 2025. The repository URL was also updated from "github-project-management" to "gitcompass".
+
+If you find any remaining references to "OctoMaster" or "octomaster" in the codebase, these should be updated to "GitCompass" or "gitcompass" respectively.
+
+## Directory Structure Transition
+
+The Python package is still transitioning from the `octomaster` directory structure to `gitcompass`. While imports in external code (README examples, documentation) have been updated to use `from gitcompass.xxx import yyy`, the actual directory may still be `src/octomaster/` until the transition is complete. Internal imports may still use `from octomaster.xxx import yyy` until the directory is renamed.
+
 ## Note to Future AI Assistants
 
 If you discover any information that would benefit future agents working on this project, please add it to this CLAUDE.md file. This includes:
@@ -265,5 +275,8 @@ If you discover any information that would benefit future agents working on this
 4. Dependencies and their purposes
 5. Updates to the CI/CD process
 6. Changes to Makefile targets or GitHub Actions workflows
+7. Status of the transition from octomaster to gitcompass directory structure
 
 Always maintain this file's organization and clarity to help future agents assist users more effectively. When working on the project, follow the established conventions and update this document if you learn something that would be useful to future agents.
+
+Never include credits to yourself in commit messages or code comments unless specifically requested.
