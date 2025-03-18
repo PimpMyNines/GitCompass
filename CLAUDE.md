@@ -1,64 +1,56 @@
-# GitCompass - Essential Guide
+# GitCompass - Agent Reference Guide
 
-## Key Commands
-
-```bash
-# Setup & Development
-make develop      # Install in development mode
-make lint         # Lint code (run before committing)
-make test         # Run tests
-make coverage     # Tests with coverage report
-make format       # Auto-format code with black
-
-# Build & Distribution
-make dist         # Build distribution packages
-make docker-build # Build Docker image
-```
-
-## Project Structure
-
-```
-src/gitcompass/       # Main package
-├── auth/             # Authentication modules
-├── issues/           # Issue management 
-├── projects/         # Project management
-├── roadmap/          # Roadmap & milestones
-└── utils/            # Shared utilities & config
-```
-
-## Authentication
+## Essential Commands
 
 ```bash
-# Option 1: Environment variable
-export GITHUB_TOKEN=your-github-token
+# Development Workflow
+make develop      # Install in development mode with dependencies
+make lint         # Run linters (flake8, mypy, isort)
+make test         # Run all tests
+make coverage     # Run tests with coverage report
+make format       # Auto-format with black
 
-# Option 2: Config file (~/.gitcompass/config.yaml)
-auth:
-  token: "your-github-token"
-  # Optional: GitHub Enterprise settings
-  api_url: "https://github.example.com/api/v3"
+# Project Structure Exploration
+find src -type f -name "*.py" | sort  # List all Python files
+grep -r "class " --include="*.py" src # Find all classes
 ```
 
-## Code Style
+## Project Architecture
 
-- Use type hints consistently
-- Black formatting (line length 100)
-- Snake_case for variables/functions, CamelCase for classes
-- All classes should have docstrings
-- New features require unit tests
-- Main modules: auth, issues, projects, roadmap
+```
+src/gitcompass/          # Main package
+├── auth/                # GitHub authentication
+├── issues/              # Issue and sub-issue management
+├── projects/            # Project board management
+├── roadmap/             # Milestone/roadmap features
+├── templates/           # Template definitions
+└── utils/               # Shared utilities
+    ├── config.py        # Configuration handling
+    └── templates.py     # Template management
+```
 
-## Common Solutions
+## Testing Infrastructure
 
-- Import paths: `from gitcompass.module import Class` (not src.gitcompass)
-- API mocking: Use fixtures in `tests/conftest.py` for unit tests
-- Rate limiting: The auth module handles retries with exponential backoff
-- Default repo: Set `default_repo: "owner/repo"` in config.yaml
-- Logging: Configure in ~/.gitcompass/config.yaml (level INFO by default)
+- **Unit tests**: `tests/unit/` - Mock-based component testing
+- **Integration tests**: `tests/integration/` - Tests with GitHub API mocks
+- **Mock fixtures**: `tests/fixtures/` - Contains API response mocks
+- **Run specific test**: `python -m pytest tests/unit/test_config.py -v`
 
-## Test Data Patterns
+## Template System
 
-- Test fixtures in tests/conftest.py
-- Mock responses in tests/fixtures/
-- All API tests should handle non-deterministic data
-- Use Pytest parametrize for testing edge cases
+Templates are stored in three locations (in order of precedence):
+1. Current directory: `./.gitcompass/templates/`
+2. User home: `~/.gitcompass/templates/`
+3. Package: `src/gitcompass/templates/`
+
+Template types:
+- `issue`: Issue templates with fields and metadata
+- `project`: Project board templates with columns
+- `roadmap`: Milestone templates with timeframes
+
+## Common Issues and Solutions
+
+- **Authentication errors**: Check environment var `GITHUB_TOKEN` or config file
+- **Import errors**: Use `from gitcompass.module import Class` (not src.gitcompass)
+- **Rate limiting**: The auth module handles GitHub API rate limiting
+- **Template not found**: Check path and ensure template type matches
